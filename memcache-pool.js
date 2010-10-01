@@ -38,11 +38,10 @@ Client.prototype.get = function(key, callback)
     // have we used this server yet? if not, connect to it    
     if (server.connection === undefined)
     {
-        server.connection = new memcache.Client();
+        server.connection = new memcache.Client(server.port, server.host);
         server.connection.connect();
         server.connection.addHandler(function ()
             {
-                sys.debug('connected to server');
                 pool.actual_get(server, key, callback);
             });
     }
