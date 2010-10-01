@@ -52,13 +52,13 @@ Client.prototype.get = function(key, callback)
     }
 }
 
-Client.prototype.actual_set = function(server, key, value, callback)
+Client.prototype.actual_set = function(server, key, value, callback, lifetime)
 {
-    server.connection.set(key, value, callback);
+    server.connection.set(key, value, callback, lifetime);
 }
 
 
-Client.prototype.set = function(key, value, callback)
+Client.prototype.set = function(key, value, callback, lifetime)
 {
     var server = this.getServer(key);
     
@@ -70,13 +70,13 @@ Client.prototype.set = function(key, value, callback)
     }
     if (server.connection.readyState == 'open')
     {    
-        this.actual_set(server, key, value, callback);
+        this.actual_set(server, key, value, callback, lifetime);
     }
     else
     {    
         server.connection.addHandler(function ()
             {
-                this.actual_set(server, key, value, callback);
+                this.actual_set(server, key, value, callback, lifetime);
             });
     }
 }
