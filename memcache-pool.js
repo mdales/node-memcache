@@ -18,11 +18,9 @@ var Client = exports.Client = function(server_list)
 
 Client.prototype.getServer = function(key)
 {
-    var hash = serverHashFunction(key)
-    sys.debug('server hash: ' + key + ' -> ' +  hash);
+    var hash = serverHashFunction(key);
     return this.servers[hash % this.servers.length];
 }
-
 
 Client.prototype.actual_get = function(server, key, callback)
 {
@@ -40,17 +38,19 @@ Client.prototype.get = function(key, callback)
     {
         server.connection = new memcache.Client(server.port, server.host);
         server.connection.connect();
+    }
+    if (server.connection.readyState == 'open')
+    {    
+        pool.actual_get(server, key, callback);
+    }
+    else
+    {
         server.connection.addHandler(function ()
             {
                 pool.actual_get(server, key, callback);
             });
     }
-    else
-    {
-        this.actual_get(server, key, callback);
-    }
 }
-
 
 Client.prototype.actual_set = function(server, key, value, callback)
 {
@@ -67,13 +67,16 @@ Client.prototype.set = function(key, value, callback)
     {
         server.connection = new memcache.Client();
         server.connection.connect();
+    }
+    if (server.connection.readyState == 'open')
+    {    
+        this.actual_set(server, key, value, callback);
+    }
+    else
+    {    
         server.connection.addHandler(function ()
             {
                 this.actual_set(server, key, value, callback);
             });
-    }
-    else
-    {
-        this.actual_set(server, key, value, callback);
     }
 }
