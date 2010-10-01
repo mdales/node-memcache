@@ -1,10 +1,5 @@
-node.js memcached client
+This is a for of the node-memcache project by elbart http://github.com/elbart/node-memcache
 
-client for using memcached with node.js
+This project adds memcache-pool.js, where you can provide a list of memcache servers rather than just a single server. The pool works lazily, only connecting to each server as requests come in.
 
-see example.js for current usage
-
-TODO:
-+ add promises to replcae current callback handling
-+ add more send / reply methods
-+ testing
+Lots still to do, in particular, doesn't yet support weighting on servers. And lots of testing needed.
