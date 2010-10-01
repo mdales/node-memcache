@@ -35,8 +35,8 @@ Client.prototype.connect = function () {
 	    this.conn.addListener("connect", function () {
 	        this.setTimeout(0);          // try to stay connected.
 	        this.setNoDelay();
-		  	self.emit("connect");
-	  		self.dispatchHandles();
+	        self.emit("connect");
+	        self.dispatchHandles();
 	    }); 
 	 
 	    this.conn.addListener("data", function (data) {
@@ -69,9 +69,9 @@ Client.prototype.addHandler = function(callback) {
 };
 
 Client.prototype.dispatchHandles = function() {
-    for (var i in this.handles) {
+    var count = this.handles.length;
+    for (var i = 0; i < count; i++) {
         var handle = this.handles.shift();
-        // sys.debug('dispatching handle ' + handle);
         handle();
     }
 };
